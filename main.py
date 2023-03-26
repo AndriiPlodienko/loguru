@@ -1,19 +1,18 @@
-import loguru
 from loguru import logger
-import os
+import time
 
-loguru.logger.add('info.log') #INITIAL
+logger.add('app.log', format='{time} {level} {message}', level='DEBUG')
 
-def copying(source, destinstion):
-    with open(source, 'rb') as src:
-        with open(destinstion, 'wb') as dst:
-            while True:
-                chunk = src.read(1024)
-                if not chunk:
-                    break
-                dst.write(chunk)
-    loguru.logger.info(f'File {src} was copied to {dst}')
+@logger.catch
+def sum(a,b):
+    logger.debug(f'Adding {a} and {b} ')
+    stime = time.time()
+    res = a + b
+    etime = time.time()
+    logger.debug(f'Result: {res}. Execution time:{etime - stime} seconds')
+    return res
 
-src = input("Write path from")
-dst = input("Write path to")
-copying(src, dst)
+if __name__ == "__main__":
+    a = 1
+    b = 5
+    sum(a,b)
